@@ -1,3 +1,6 @@
+import pygame
+
+
 class Laser:
     def __init__(self, x, y, img):
         self.x = x
