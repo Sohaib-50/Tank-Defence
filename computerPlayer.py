@@ -1,6 +1,6 @@
-from ships import Ship
+from ships import Tank
 
-class Enemy(Ship):
+class Enemy(Tank):
     COLOR_MAP = {
                 "red": (RED_SPACE_SHIP, RED_LASER),
                 "green": (GREEN_SPACE_SHIP, GREEN_LASER),
