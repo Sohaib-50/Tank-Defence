@@ -1,7 +1,6 @@
 import pygame
 import os
 from random import randint
-from pygame.constants import K_LEFT
 from constants import WIDTH, HEIGHT, FPS, PLAYER_VEL, ENEMY_VEL, BULLETS_VEL, BLACK
 from cannon import Cannon
 from tank import Tank
@@ -56,8 +55,9 @@ def play():
         
         WINDOW.blit(BG, (0, 0))  # background image
         WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))  # level text
-        WINDOW.blit(health_label, (10, 10))
+        WINDOW.blit(health_label, (10, 10))  # health text
         draw_healthbar(WINDOW, player_cannon)
+        
         draw_track()  # cannon track
         for enemy in enemies:  # draw enemies
             enemy.draw(WINDOW) 
