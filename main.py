@@ -12,7 +12,7 @@ pygame.display.set_caption("Tank Defence")
 
 
 ## Load images
-BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "bgwar5.png")), (WIDTH, HEIGHT))  # Background image
+BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "bgwar6.png")), (WIDTH, HEIGHT))  # Background image
 # BG = pygame.image.load(os.path.join("assets", "bgwar5.png"))  # Background image
 
 CANNON_IMG = pygame.image.load(os.path.join('assets', 'Gun_01.png'))
