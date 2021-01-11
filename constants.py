@@ -10,3 +10,6 @@ RED = (255, 0, 0)
 
 
 FPS = 60  # Frame rate
+PLAYER_VEL = 10
+ENEMY_VEL = 2
+BULLETS_VEL = 15
