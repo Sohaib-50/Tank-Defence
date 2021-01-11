@@ -3,8 +3,8 @@ TODO:
 1) Add high score feature using filing
 
 	1a) make an empty text file
-	1b) implement the get_highscore function in helpers.py
-	1c) implememt the update_highscore function in helpers.py
+	1b) implement the get_highscore function in helpers.py (read from file)
+	1c) implememt the update_highscore function in helpers.py (put score passed as parameter to file)
 	1d) get highscore in main.py above the image loading lines
 	1e) inside update_window() function inside play function inside main.py, blit the high
 	score onto screen after the line "draw_healthbar(WINDOW, player_cannon)" with text
