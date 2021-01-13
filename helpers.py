@@ -1,4 +1,5 @@
 import pygame
+from constants import WIDTH, HEIGHT, RED, GREEN
 
 def get_highscore() -> int:
     '''
@@ -15,8 +16,19 @@ def update_highscore(new_score: int) -> None:
 
 
 def draw_healthbar(window, player):
-        pygame.draw.rect(window, (255,0,0), (10, 45, 120, 15))
-        pygame.draw.rect(window, (0,255,0), (10, 45, 120 * (player.health/player.max_health), 15))
+        pygame.draw.rect(window, RED, (10, 45, 120, 15))
+        pygame.draw.rect(window, GREEN, (10, 45, 120 * (player.health/player.max_health), 15))
+
+
+def draw_track(window, track_image):
+    '''
+    draws the track on which the player cannon can move
+    '''
+    x_coordinate = 0  # start drawing from the left
+
+    while x_coordinate <= WIDTH:
+        window.blit(track_image, (x_coordinate, HEIGHT-45))
+        x_coordinate += track_image.get_width()
 
 
 def collide(obj1, obj2) -> bool:

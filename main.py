@@ -1,24 +1,23 @@
 import pygame
 import os
 from random import randint
-
 from constants import WIDTH, HEIGHT, FPS, PLAYER_VEL, ENEMY_VEL, BULLETS_VEL, INITIAL_WAVE, BLACK, WHITE, GREEN, GREY
 from cannon import Cannon
 from tank import Tank
-from helpers import collide, draw_healthbar
+from helpers import collide, draw_healthbar, draw_track
 
 
-pygame.font.init()
 pygame.init()
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Tank Defence")
+CLOCK = pygame.time.Clock()  # to limit framerate
 
 
 ## Load images
 BG = pygame.transform.smoothscale(pygame.image.load(os.path.join("assets", "bg_1.png")), (WIDTH, HEIGHT))  # Background image
 
 TRACK = pygame.image.load(os.path.join('assets', 'Track_1_A.png'))  # player's tracks
-TRACK = pygame.transform.smoothscale(TRACK, (int(TRACK.get_width()*0.6), int(TRACK.get_height()*0.6)))  # scale down to 60 percent of original
+TRACK = pygame.transform.smoothscale(TRACK, (int(TRACK.get_width()*0.5), int(TRACK.get_height()*0.5)))  # scale down to 50 percent of original
 TRACK = pygame.transform.rotate(TRACK, 90)  # rotate by 90 degrees
 
 CANNON_IMG = pygame.image.load(os.path.join('assets', 'Gun_01.png'))
@@ -35,45 +34,42 @@ TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 
 
 
-STATS_FONT = pygame.font.SysFont("comicsans", 40)
-LOST_LABEL = pygame.font.SysFont("comicsans", 100).render("You Lost!!", 1, (0, 0, 0))
-
-
 def play():
     run = True
-    clock = pygame.time.Clock()  # to mantain framerate
+    stats_font = pygame.font.SysFont("arial", 30)
+    lost_label = pygame.font.SysFont("arial", 90).render("You Lost!!", 1, WHITE)
     level = 0
 
     enemies = []
-    wave_size = 0
+    wave_size = 0  # number of enemies in a level
 
-    player_cannon = Cannon((WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.78), vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
+    player_cannon = Cannon((WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.81), vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
 
     lost = False
     lost_time = 0
 
     def update_window():
-        level_label = STATS_FONT.render(f"Level: {level}", 1, WHITE)
-        health_label = STATS_FONT.render(f"Health:", 1, WHITE)
+        level_label = stats_font.render(f"Level: {level}", 1, WHITE)
+        health_label = stats_font.render(f"Health", 1, WHITE)
         
         WINDOW.blit(BG, (0, 0))  # background image
         WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))  # level text
         WINDOW.blit(health_label, (10, 10))  # health text
         draw_healthbar(WINDOW, player_cannon)
-        draw_track()  # cannon track
+        draw_track(WINDOW, TRACK)  # cannon track
         for enemy in enemies:  # draw enemies
             enemy.draw(WINDOW) 
         player_cannon.draw(WINDOW)  # cannon
         
         if lost:
-            WINDOW.blit(LOST_LABEL, (WIDTH/2 - LOST_LABEL.get_width()/2, 350))
+            WINDOW.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, HEIGHT*1/5))
 
         pygame.display.update()  # make the latest changes appear on screen
 
 
 
     while run:
-        clock.tick(FPS)
+        CLOCK.tick(FPS)
         update_window()
 
         if player_cannon.get_health() <= 0:
@@ -81,7 +77,7 @@ def play():
             lost_time += 1
 
         if lost:
-            if lost_time > (FPS * 3):  # if lost for 3 seconds
+            if lost_time > (FPS * 3):  # if lost for 3 seconds (to show the lost message for 3 seconds)
                 run = False
             else:
                 continue
@@ -136,11 +132,11 @@ def play():
 def main_menu():
     btn_padding = 10
     run = True
-    menu_font_1 = pygame.font.SysFont("comicsans", 100)
-    menu_font_2 = pygame.font.SysFont("comicsans", 55)
-    menu_font_3 = pygame.font.SysFont("comicsans", 30)
+    menu_font_1 = pygame.font.SysFont("comicsansms", 100)
+    menu_font_2 = pygame.font.SysFont("arial", 35)
+    menu_font_3 = pygame.font.SysFont("arial", 23)
 
-    title_label = menu_font_1.render("TankDefence", 1, WHITE)
+    title_label = menu_font_1.render("Tank Defence", 1, WHITE)
 
     instructions_1 = "Instructions: You are being attacked by tanks."
     instructions_2 = "Move your cannon using 'a' and 'd' keys or right and left arrow keys."
@@ -168,7 +164,7 @@ def main_menu():
     while run:
         WINDOW.fill(GREY)
         
-        WINDOW.blit(title_label, (WIDTH/2 - title_label.get_width()/2, HEIGHT*(1/6)))  # draw game title text
+        WINDOW.blit(title_label, (WIDTH/2 - title_label.get_width()/2, HEIGHT*(1/10)))  # draw game title text
         
         # draw instructions text
         WINDOW.blit(instructions_label_1, (WIDTH/2 - instructions_label_1.get_width()/2, HEIGHT*(2/5)))
@@ -193,14 +189,6 @@ def main_menu():
 
     pygame.quit()
 
-
-def draw_track():
-    '''draws the track on which the player cannon can move'''
-    x_coordinate = 0  # start drawing from the left
-
-    while x_coordinate <= WIDTH:
-        WINDOW.blit(TRACK, (x_coordinate, HEIGHT-60))
-        x_coordinate += TRACK.get_width()
 
 
 
