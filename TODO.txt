@@ -14,3 +14,5 @@ TODO:
 2) Change font by using own font in assets
 	
 3) reduce enemy bullet size
+
+4) USE LINKED LIST FOR BULLETS LISTSS!!
