@@ -15,7 +15,7 @@ pygame.display.set_caption("Tank Defence")
 
 
 ## Load images
-BG = pygame.transform.smoothscale(pygame.image.load(os.path.join("assets", "bgwar6.png")), (WIDTH, HEIGHT))  # Background image
+BG = pygame.transform.smoothscale(pygame.image.load(os.path.join("assets", "bg_1.png")), (WIDTH, HEIGHT))  # Background image
 
 TRACK = pygame.image.load(os.path.join('assets', 'Track_1_A.png'))  # player's tracks
 TRACK = pygame.transform.smoothscale(TRACK, (int(TRACK.get_width()*0.6), int(TRACK.get_height()*0.6)))  # scale down to 60 percent of original
@@ -53,8 +53,8 @@ def play():
     lost_time = 0
 
     def update_window():
-        level_label = STATS_FONT.render(f"Level: {level}", 1, BLACK)
-        health_label = STATS_FONT.render(f"Health:", 1, BLACK)
+        level_label = STATS_FONT.render(f"Level: {level}", 1, WHITE)
+        health_label = STATS_FONT.render(f"Health:", 1, WHITE)
         
         WINDOW.blit(BG, (0, 0))  # background image
         WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))  # level text
