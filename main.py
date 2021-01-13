@@ -1,7 +1,8 @@
 import pygame
 import os
 from random import randint
-from constants import WIDTH, HEIGHT, FPS, PLAYER_VEL, ENEMY_VEL, BULLETS_VEL, BLACK
+
+from constants import WIDTH, HEIGHT, FPS, PLAYER_VEL, ENEMY_VEL, BULLETS_VEL, INITIAL_WAVE, BLACK, WHITE, GREEN, GREY
 from cannon import Cannon
 from tank import Tank
 from helpers import collide, draw_healthbar
@@ -32,6 +33,8 @@ CANNON_BULLET = pygame.transform.smoothscale(CANNON_BULLET, (int(CANNON_BULLET.g
 TANK_BULLET = pygame.image.load(os.path.join('assets', 'Medium_Shell.png'))
 TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 
+
+
 STATS_FONT = pygame.font.SysFont("comicsans", 40)
 LOST_LABEL = pygame.font.SysFont("comicsans", 100).render("You Lost!!", 1, (0, 0, 0))
 
@@ -42,7 +45,7 @@ def play():
     level = 0
 
     enemies = []
-    wave_size = 5
+    wave_size = 0
 
     player_cannon = Cannon((WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.78), vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
 
@@ -57,7 +60,6 @@ def play():
         WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))  # level text
         WINDOW.blit(health_label, (10, 10))  # health text
         draw_healthbar(WINDOW, player_cannon)
-        
         draw_track()  # cannon track
         for enemy in enemies:  # draw enemies
             enemy.draw(WINDOW) 
@@ -85,10 +87,11 @@ def play():
                 continue
 
         if len(enemies) == 0:  # if all enemies of current level are destroyed
+            print(f"Wavesize: {wave_size}, level={level}")
             level += 1
-            wave_size += 1
+            wave_size += INITIAL_WAVE
             for i in range(wave_size):
-                enemy = Tank((randint(0, WIDTH-TANK_IMG.get_width()), randint(-HEIGHT, 0)), ENEMY_VEL, TANK_IMG, TANK_BULLET)
+                enemy = Tank((randint(0, WIDTH-TANK_IMG.get_width()), randint(-HEIGHT, -HEIGHT//4)), ENEMY_VEL, TANK_IMG, TANK_BULLET)
                 enemies.append(enemy)
 
         for event in pygame.event.get():
@@ -131,20 +134,62 @@ def play():
     
 
 def main_menu():
+    btn_padding = 10
     run = True
-    menu_title_font = pygame.font.SysFont("comicsans", 70)
-    menu_title_label = menu_title_font.render("Press the space-bar to begin...", 1, (0,0,0))
+    menu_font_1 = pygame.font.SysFont("comicsans", 100)
+    menu_font_2 = pygame.font.SysFont("comicsans", 55)
+    menu_font_3 = pygame.font.SysFont("comicsans", 30)
+
+    title_label = menu_font_1.render("TankDefence", 1, WHITE)
+
+    instructions_1 = "Instructions: You are being attacked by tanks."
+    instructions_2 = "Move your cannon using 'a' and 'd' keys or right and left arrow keys."
+    instructions_3 = "Press spacebar to shoot."
+    instructions_4 = "You will have to shoot down all enemies in a level to move to the next level."
+    instructions_5 = "You will lose health every time a bullet hits you, an opponent tank collides "
+    instructions_6 = "with you or opponent tank goes past you. The game gets over when your health"
+    instructions_7 = "becomes zero (health bar will be displayed on top left of screen when you start the game)."
+    instructions_label_1 = menu_font_3.render(instructions_1, 1, WHITE)
+    instructions_label_2 = menu_font_3.render(instructions_2, 1, WHITE)
+    instructions_label_3 = menu_font_3.render(instructions_3, 1, WHITE)
+    instructions_label_4 = menu_font_3.render(instructions_4, 1, WHITE)
+    instructions_label_5 = menu_font_3.render(instructions_5, 1, WHITE)
+    instructions_label_6 = menu_font_3.render(instructions_6, 1, WHITE)
+    instructions_label_7 = menu_font_3.render(instructions_7, 1, WHITE)
+
+    begin_label = menu_font_2.render("Play", 1, BLACK)
+    begin_button = begin_label.get_rect()
+    begin_button.x = WIDTH/2 - begin_label.get_width()/2 - btn_padding
+    begin_button.y = HEIGHT*(5/6) - btn_padding
+    begin_button.width += btn_padding * 2
+    begin_button.height += btn_padding * 2
+
     
     while run:
-        WINDOW.blit(BG, (0, 0))  # place the background image
-        WINDOW.blit(menu_title_label, (WIDTH/2 - menu_title_label.get_width()/2, 350))  # place menu font
+        WINDOW.fill(GREY)
+        
+        WINDOW.blit(title_label, (WIDTH/2 - title_label.get_width()/2, HEIGHT*(1/6)))  # draw game title text
+        
+        # draw instructions text
+        WINDOW.blit(instructions_label_1, (WIDTH/2 - instructions_label_1.get_width()/2, HEIGHT*(2/5)))
+        WINDOW.blit(instructions_label_2, (WIDTH/2 - instructions_label_2.get_width()/2, HEIGHT*(2/5)+instructions_label_1.get_height()))
+        WINDOW.blit(instructions_label_3, (WIDTH/2 - instructions_label_3.get_width()/2, HEIGHT*(2/5)+instructions_label_1.get_height()*2))
+        WINDOW.blit(instructions_label_4, (WIDTH/2 - instructions_label_4.get_width()/2, HEIGHT*(2/5)+instructions_label_1.get_height()*3))
+        WINDOW.blit(instructions_label_5, (WIDTH/2 - instructions_label_5.get_width()/2, HEIGHT*(2/5)+instructions_label_1.get_height()*5))
+        WINDOW.blit(instructions_label_6, (WIDTH/2 - instructions_label_6.get_width()/2, HEIGHT*(2/5)+instructions_label_1.get_height()*6))
+        WINDOW.blit(instructions_label_7, (WIDTH/2 - instructions_label_7.get_width()/2, HEIGHT*(2/5)+instructions_label_1.get_height()*7))
+
+        pygame.draw.rect(WINDOW, GREEN, begin_button, border_radius=10)  # draw play button
+        WINDOW.blit(begin_label, (WIDTH/2 - begin_label.get_width()/2, HEIGHT*(5/6)))  # draw play button text on button
+
         pygame.display.update()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
-        if pygame.key.get_pressed()[pygame.K_SPACE]:
-            play()
+            if event.type == pygame.MOUSEBUTTONDOWN:  # if mouse pressed
+                if begin_button.collidepoint(event.pos):  # if mouse pressed on button
+                    play()  # start the game
 
     pygame.quit()
 
@@ -156,5 +201,7 @@ def draw_track():
     while x_coordinate <= WIDTH:
         WINDOW.blit(TRACK, (x_coordinate, HEIGHT-60))
         x_coordinate += TRACK.get_width()
+
+
 
 main_menu()

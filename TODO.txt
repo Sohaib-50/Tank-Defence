@@ -10,4 +10,7 @@ TODO:
 	score onto screen after the line "draw_healthbar(WINDOW, player_cannon)" with text
 	"Highscore: <the highscore recieved from text file in step 1d>". Blit
 	it on top right corner under the "level" text
+
+2) Change font by using own font in assets
 	
+3) reduce enemy bullet size
