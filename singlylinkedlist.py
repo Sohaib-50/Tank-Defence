@@ -20,20 +20,17 @@ class ListNode:
         print()
 
     def __len__(self):
-        return self.__length
-        # a = self
-        # i=0
-        # while a is not None:
-        #     i+=1
-        #     a = a.next
-        # return i
+        current = self
+        l = 0
+        while current is not None:
+            l += 1
+            current = current.next
+        return l
 
     def insert(self, value):
         n = ListNode(value)
         n.next=self.next
         self.next=n
-        self.__length += 1
-
 
     def delete(self):
         '''
@@ -46,8 +43,7 @@ class ListNode:
         else:
             self.data = self.next.data
             self.next = self.next.next
-
-        self.__length -= 1
+    
     # def delete(self):
     #     item=None
     #     if self.next is not None:
