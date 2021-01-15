@@ -1,10 +1,16 @@
-import pygame
 import os
 from random import randint
-from constants import WIDTH, HEIGHT, FPS, PLAYER_VEL, ENEMY_VEL, BULLETS_VEL, INITIAL_WAVE, BLACK, WHITE, GREEN, GREY
+from typing import List
+
+import pygame
+
 from cannon import Cannon
-from tank import Tank
+from constants import (BLACK, BULLETS_VEL, ENEMY_VEL, FPS, GREEN, GREY, HEIGHT,
+                       INITIAL_WAVE, PLAYER_VEL, WHITE, WIDTH)
 from helpers import collide, draw_healthbar, draw_track
+from tank import Tank
+
+from singlylinkedlist import ListNode
 
 
 pygame.init()
@@ -40,7 +46,7 @@ def play():
     lost_label = pygame.font.SysFont("arial", 90).render("You Lost!!", 1, WHITE)
     level = 0
 
-    enemies = []
+    enemies: ListNode = None
     wave_size = 0  # number of enemies in a level
 
     player_cannon = Cannon((WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.81), vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
@@ -55,10 +61,17 @@ def play():
         WINDOW.blit(BG, (0, 0))  # background image
         WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))  # level text
         WINDOW.blit(health_label, (10, 10))  # health text
-        draw_healthbar(WINDOW, player_cannon)
+        draw_healthbar(WINDOW, player_cannon)  # health bar
         draw_track(WINDOW, TRACK)  # cannon track
-        for enemy in enemies:  # draw enemies
-            enemy.draw(WINDOW) 
+
+        # draw enemies
+        current = enemies
+        while current is not None:
+            enemy = current.data
+            enemy.draw(WINDOW)
+            current = current.next
+        # for enemy in enemies:  # draw enemies
+        #     enemy.draw(WINDOW) 
         player_cannon.draw(WINDOW)  # cannon
         
         if lost:
@@ -82,13 +95,17 @@ def play():
             else:
                 continue
 
-        if len(enemies) == 0:  # if all enemies of current level are destroyed
-            print(f"Wavesize: {wave_size}, level={level}")
+        if enemies is None:  # if all enemies of current level are destroyed
             level += 1
             wave_size += INITIAL_WAVE
-            for i in range(wave_size):
-                enemy = Tank((randint(0, WIDTH-TANK_IMG.get_width()), randint(-HEIGHT, -HEIGHT//4)), ENEMY_VEL, TANK_IMG, TANK_BULLET)
-                enemies.append(enemy)
+
+            # add wave_size amount of enemies to the enemies linkedlist
+            enemies = ListNode(
+                Tank((randint(0, WIDTH-TANK_IMG.get_width()), randint(-HEIGHT, -HEIGHT//4)), ENEMY_VEL, TANK_IMG, TANK_BULLET)
+            )
+            for i in range(wave_size - 1):
+                enemy =Tank((randint(0, WIDTH-TANK_IMG.get_width()), randint(-HEIGHT, -HEIGHT//4)), ENEMY_VEL, TANK_IMG, TANK_BULLET)
+                enemies.insert(enemy)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -108,21 +125,39 @@ def play():
         if keys_pressed[pygame.K_SPACE]:
             player_cannon.shoot()
 
-        for enemy in enemies[:]:
+        current = enemies
+        while current is not None:
+            enemy = current.data
             enemy.move()
             enemy.move_bullets(BULLETS_VEL, player_cannon)
+            
+            if collide(enemy, player_cannon) or enemy.get_y() > HEIGHT:
+                player_cannon.reduce_health()  #TODO: health or lives for offscreen?
+                current.delete()
 
-            if collide(enemy, player_cannon):
-                player_cannon.reduce_health()
-                enemies.remove(enemy)
-
-            elif enemy.get_y() > HEIGHT:
-                player_cannon.reduce_health()  #TODO: health or lives?
-                enemies.remove(enemy)
-                
-            # make enemies shoot at random times
+            # make enemy shoot at random times
             if randint(0, FPS*2) == 1:
                 enemy.shoot()
+
+            current = current.next
+
+            
+        
+        # for enemy in enemies[:]:
+        #     enemy.move()
+        #     enemy.move_bullets(BULLETS_VEL, player_cannon)
+
+        #     if collide(enemy, player_cannon):
+        #         player_cannon.reduce_health()
+        #         enemies.remove(enemy)
+
+        #     elif enemy.get_y() > HEIGHT:
+        #         player_cannon.reduce_health()  #TODO: health or lives?
+        #         enemies.remove(enemy)
+                
+        #     # make enemies shoot at random times
+        #     if randint(0, FPS*2) == 1:
+        #         enemy.shoot()
             
 
         player_cannon.move_bullets(-BULLETS_VEL, enemies)
@@ -153,15 +188,16 @@ def main_menu():
     instructions_label_6 = menu_font_3.render(instructions_6, 1, WHITE)
     instructions_label_7 = menu_font_3.render(instructions_7, 1, WHITE)
 
-    begin_label = menu_font_2.render("Play", 1, BLACK)
-    begin_button = begin_label.get_rect()
-    begin_button.x = WIDTH/2 - begin_label.get_width()/2 - btn_padding
-    begin_button.y = HEIGHT*(5/6) - btn_padding
-    begin_button.width += btn_padding * 2
-    begin_button.height += btn_padding * 2
+    play_label = menu_font_2.render("Play", 1, BLACK)
+    play_button = play_label.get_rect()
+    play_button.x = WIDTH/2 - play_label.get_width()/2 - btn_padding
+    play_button.y = HEIGHT*(5/6) - btn_padding
+    play_button.width += btn_padding * 2
+    play_button.height += btn_padding * 2
 
     
     while run:
+        CLOCK.tick(FPS)
         WINDOW.fill(GREY)
         
         WINDOW.blit(title_label, (WIDTH/2 - title_label.get_width()/2, HEIGHT*(1/10)))  # draw game title text
@@ -175,8 +211,8 @@ def main_menu():
         WINDOW.blit(instructions_label_6, (WIDTH/2 - instructions_label_6.get_width()/2, HEIGHT*(2/5)+instructions_label_1.get_height()*6))
         WINDOW.blit(instructions_label_7, (WIDTH/2 - instructions_label_7.get_width()/2, HEIGHT*(2/5)+instructions_label_1.get_height()*7))
 
-        pygame.draw.rect(WINDOW, GREEN, begin_button, border_radius=10)  # draw play button
-        WINDOW.blit(begin_label, (WIDTH/2 - begin_label.get_width()/2, HEIGHT*(5/6)))  # draw play button text on button
+        pygame.draw.rect(WINDOW, GREEN, play_button, border_radius=15)  # draw play button
+        WINDOW.blit(play_label, (WIDTH/2 - play_label.get_width()/2, HEIGHT*(5/6)))  # draw play button text on button
 
         pygame.display.update()
 
@@ -184,7 +220,7 @@ def main_menu():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:  # if mouse pressed
-                if begin_button.collidepoint(event.pos):  # if mouse pressed on button
+                if play_button.collidepoint(event.pos):  # if mouse pressed on button
                     play()  # start the game
 
     pygame.quit()

@@ -10,13 +10,6 @@ class Cannon(Weapon):
         super().__init__(position,vel, image, bullet_image, health)
         self.max_health = health
 
-    # def draw(self, window) -> None:
-    #     super().draw(window)
-    #     # self.draw_healthbar(window)
-
-    # def draw_healthbar(self, window):
-    #     pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.image.get_height() + 10, self.image.get_width(), 10))
-    #     pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.image.get_height() + 10, self.image.get_width() * (self.health/self.max_health), 10))
 
     def get_x(self) -> int:
         return self.x
@@ -37,13 +30,18 @@ class Cannon(Weapon):
             if bullet.off_screen(HEIGHT):
                 self.bullets.remove(bullet)
             else:
-                for enemy in enemies:
-                    if bullet.collision(enemy):
-                        enemies.remove(enemy)
-                        self.bullets.remove(bullet)
-                        if bullet in self.bullets:
-                            self.bullets.remove(bullet)
-
+                current = enemies
+                while current is not None:
+                    enemy = current.data
+                    try:
+                        if bullet.collision(enemy):
+                            current.delete()
+                            if bullet in self.bullets:
+                                self.bullets.remove(bullet)
+                    except:
+                        print(enemies, enemy, current)
+                    else:
+                        current = current.next
 
     def shoot(self):
         '''
