@@ -1,11 +1,15 @@
-import pygame
 import os
+from copy import copy
 from random import randint
-from constants import WIDTH, HEIGHT, FPS, PLAYER_VEL, ENEMY_VEL, BULLETS_VEL, INITIAL_WAVE, BLACK, WHITE, GREEN, GREY
-from cannon import Cannon
-from tank import Tank
-from helpers import collide, draw_healthbar, draw_track
 
+from bullet import Bullet
+import pygame
+
+from cannon import Cannon
+from constants import (BLACK, BULLETS_VEL, ENEMY_VEL, FPS, GREEN, GREY, HEIGHT,
+                       INITIAL_WAVE, PLAYER_VEL, WHITE, WIDTH)
+from helpers import collide, draw_healthbar, draw_track
+from tank import Tank
 
 pygame.init()
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -34,13 +38,13 @@ TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 
 
 
-def play():
+def play() -> None:
     run = True
     stats_font = pygame.font.SysFont("arial", 30)
     lost_label = pygame.font.SysFont("arial", 90).render("You Lost!!", 1, WHITE)
     level = 0
 
-    enemies = []
+    enemies = set()
     wave_size = 0  # number of enemies in a level
 
     player_cannon = Cannon((WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.81), vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
@@ -71,6 +75,9 @@ def play():
     while run:
         CLOCK.tick(FPS)
         update_window()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
         if player_cannon.get_health() <= 0:
             lost = True
@@ -83,16 +90,16 @@ def play():
                 continue
 
         if len(enemies) == 0:  # if all enemies of current level are destroyed
-            print(f"Wavesize: {wave_size}, level={level}")
             level += 1
             wave_size += INITIAL_WAVE
             for i in range(wave_size):
-                enemy = Tank((randint(0, WIDTH-TANK_IMG.get_width()), randint(-HEIGHT, -HEIGHT//4)), ENEMY_VEL, TANK_IMG, TANK_BULLET)
-                enemies.append(enemy)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+                x = randint(
+                    max(0, player_cannon.get_x()-WIDTH//2),
+                    min(WIDTH-TANK_IMG.get_width(), player_cannon.get_x()+WIDTH//2)
+                    )  # to make new enemies spawn more towards the area player is currently in
+                y = randint(-HEIGHT, -HEIGHT//4)  
+                new_enemy = Tank((x, y), ENEMY_VEL, TANK_IMG, TANK_BULLET)
+                enemies.add(new_enemy)
 
         keys_pressed = pygame.key.get_pressed()
 
@@ -108,7 +115,7 @@ def play():
         if keys_pressed[pygame.K_SPACE]:
             player_cannon.shoot()
 
-        for enemy in enemies[:]:
+        for enemy in set(enemies):  # need to iterate over copy of enemies because the set changes during iteration
             enemy.move()
             enemy.move_bullets(BULLETS_VEL, player_cannon)
 
@@ -117,7 +124,7 @@ def play():
                 enemies.remove(enemy)
 
             elif enemy.get_y() > HEIGHT:
-                player_cannon.reduce_health()  #TODO: health or lives?
+                player_cannon.reduce_health()  # TODO: health or lives?
                 enemies.remove(enemy)
                 
             # make enemies shoot at random times
@@ -129,7 +136,7 @@ def play():
 
     
 
-def main_menu():
+def main_menu() -> None:
     btn_padding = 10
     run = True
     menu_font_1 = pygame.font.SysFont("comicsansms", 100)

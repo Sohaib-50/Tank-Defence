@@ -1,5 +1,5 @@
 # Dimensions in pixels
-HEIGHT = 680  
+HEIGHT = 680
 WIDTH = (HEIGHT * 3) // 2  # for 3:2 aspect ratio
 
 
