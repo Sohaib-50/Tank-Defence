@@ -25,7 +25,12 @@ class Bullet():
         self.y += vel
 
     def off_screen(self, screen_height) -> None:
-        return not(self.y <= screen_height and self.y >= 0)
+        if (self.y > screen_height) or (self.y < 0):
+            print(self.y)
+            return (self.y > screen_height) or (self.y < 0)
+        return (self.y > screen_height) or (self.y < 0)
+            
+        # return not(self.y <= screen_height and self.y >= 0)
 
     def collision(self, obj):
         return collide(self, obj)

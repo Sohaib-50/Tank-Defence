@@ -11,7 +11,7 @@ GREEN = (52, 235, 82)
 GREY = (43, 43, 43)
 
 
-FPS = 60  # Frame rate
+FPS = 120  # Frame rate
 PLAYER_VEL = 10
 ENEMY_VEL = 1
 BULLETS_VEL = 12

@@ -33,15 +33,19 @@ class Cannon(Weapon):
                 current = enemies
                 while current is not None:
                     enemy = current.data
-                    try:
-                        if bullet.collision(enemy):
-                            current.delete()
-                            if bullet in self.bullets:
-                                self.bullets.remove(bullet)
-                    except:
-                        print(enemies, enemy, current)
+                    if bullet.collision(enemy):
+                        if current == enemies:
+                            enemies = enemies.next
+                        current = current.delete()
+                        if bullet in self.bullets:
+                            self.bullets.remove(bullet)
                     else:
                         current = current.next
+
+                    
+        return enemies
+
+                   
 
     def shoot(self):
         '''

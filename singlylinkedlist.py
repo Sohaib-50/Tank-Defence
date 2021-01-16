@@ -2,7 +2,6 @@ class ListNode:
     def __init__(self,data):
         self.data=data
         self.next=None
-        self.__length = 0
 
     # def traverse(self):
     #     a=self
@@ -43,6 +42,8 @@ class ListNode:
         else:
             self.data = self.next.data
             self.next = self.next.next
+            
+        return self
     
     # def delete(self):
     #     item=None
@@ -51,3 +52,6 @@ class ListNode:
     #         item=tmp.data
     #         self.next=tmp.next
     #     return item
+
+    def __repr__(self):
+        return repr(self.data)

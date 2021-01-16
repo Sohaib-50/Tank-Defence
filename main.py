@@ -46,7 +46,8 @@ def play():
     lost_label = pygame.font.SysFont("arial", 90).render("You Lost!!", 1, WHITE)
     level = 0
 
-    enemies: ListNode = None
+    # enemies: ListNode = None
+    enemies = None
     wave_size = 0  # number of enemies in a level
 
     player_cannon = Cannon((WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.81), vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
@@ -84,6 +85,10 @@ def play():
     while run:
         CLOCK.tick(FPS)
         update_window()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
         if player_cannon.get_health() <= 0:
             lost = True
@@ -107,10 +112,6 @@ def play():
                 enemy =Tank((randint(0, WIDTH-TANK_IMG.get_width()), randint(-HEIGHT, -HEIGHT//4)), ENEMY_VEL, TANK_IMG, TANK_BULLET)
                 enemies.insert(enemy)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
         keys_pressed = pygame.key.get_pressed()
 
         # keys for moving left/right
@@ -131,15 +132,20 @@ def play():
             enemy.move()
             enemy.move_bullets(BULLETS_VEL, player_cannon)
             
-            if collide(enemy, player_cannon) or enemy.get_y() > HEIGHT:
+            if x := (collide(enemy, player_cannon) or (enemy.get_y() > HEIGHT)):
                 player_cannon.reduce_health()  #TODO: health or lives for offscreen?
-                current.delete()
+                if current == enemies:
+                    enemies = enemies.next
+                current = current.delete()
+
+            if not x:
+                current = current.next
 
             # make enemy shoot at random times
             if randint(0, FPS*2) == 1:
                 enemy.shoot()
 
-            current = current.next
+            
 
             
         
@@ -158,9 +164,7 @@ def play():
         #     # make enemies shoot at random times
         #     if randint(0, FPS*2) == 1:
         #         enemy.shoot()
-            
-
-        player_cannon.move_bullets(-BULLETS_VEL, enemies)
+        enemies = player_cannon.move_bullets(-BULLETS_VEL, enemies)
 
     
 

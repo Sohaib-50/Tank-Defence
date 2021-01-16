@@ -38,3 +38,7 @@ class Tank(Weapon):
             bullet = Bullet((self.x-35, self.y+self.get_height()*0.5), self.bullet_image)
             self.bullets.append(bullet)
             self.cooldown_counter = 1  # start cooldown
+
+
+    def __repr__(self):
+        return f"<Tank, x={self.x}, y={self.y}>"
