@@ -18,10 +18,10 @@ class Bullet:
         return self.y
 
     def draw(self, window) -> None:
-        r = self.image.get_rect()
-        r.height
-        r.x, r.y = self.x, self.y
-        pygame.draw.rect(window, (255,255,255), r)
+        # r = self.image.get_rect()
+        # r.height
+        # r.x, r.y = self.x, self.y
+        # pygame.draw.rect(window, (255,255,255), r)
         window.blit(self.image, (self.x, self.y))
 
     def move(self, vel) -> None:
