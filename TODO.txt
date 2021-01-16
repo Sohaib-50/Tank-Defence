@@ -13,4 +13,4 @@ TODO:
 
 2) Change font by using own font in assets
 	
-3) reduce enemy bullet size
+(DONE) 3) reduce enemy bullet size
