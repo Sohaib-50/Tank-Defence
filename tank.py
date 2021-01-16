@@ -21,13 +21,14 @@ class Tank(Weapon):
     def move_bullets(self, vel: int, player: Cannon)  -> None:
         self.cooldown()
         for bullet in self.bullets:
-            bullet.move(vel)
             if bullet.off_screen(HEIGHT):
                 print(bullet)
                 self.bullets.remove(bullet)
             elif bullet.collision(player):
                 player.reduce_health()
                 self.bullets.remove(bullet)
+            bullet.move(vel)
+
 
     def shoot(self) -> None:
         '''

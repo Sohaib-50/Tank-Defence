@@ -18,7 +18,10 @@ class Bullet:
         return self.y
 
     def draw(self, window) -> None:
-        pygame.draw.rect(window, (0,0,0), r)
+        r = self.image.get_rect()
+        r.height
+        r.x, r.y = self.x, self.y
+        pygame.draw.rect(window, (255,255,255), r)
         window.blit(self.image, (self.x, self.y))
 
     def move(self, vel) -> None:
@@ -28,10 +31,10 @@ class Bullet:
         '''
         returns true if bullet has gone outside screen area
         '''
-        return self.y >= screen_height or (self.y + self.mask.get_size()[0]) < 0
+        return self.y >= screen_height or (self.y + self.mask.get_size()[0]*0.70) < 0
 
     def collision(self, obj):
         return collide(self, obj)
 
     def __repr__(self) -> str:
-        return f"<Bullet at {self.x}, {self.y}>"
+        return f"<Bullet ({self.x}, {self.y})>"
