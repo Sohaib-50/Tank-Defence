@@ -47,7 +47,7 @@ class Cannon(Weapon):
         """
         if self.cooldown_counter == 0:  # if player can shoot
             # keeping the starting position of bullet to be the top tip of player cannon
-            bullet = Bullet((self.x - 17, self.y - 25), self.bullet_image)
+            bullet = Bullet((self.x+7, self.y-25), self.bullet_image)
             self.bullets.append(bullet)
             self.cooldown_counter = 1  # start cooldown
 

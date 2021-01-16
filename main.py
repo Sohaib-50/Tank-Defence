@@ -30,10 +30,10 @@ CANNON_IMG = pygame.transform.smoothscale(CANNON_IMG, (int(CANNON_IMG.get_width(
 TANK_IMG = pygame.image.load(os.path.join("assets", "M-6_preview.png"))
 TANK_IMG = pygame.transform.smoothscale(TANK_IMG, (int(TANK_IMG.get_width()*0.45), int(TANK_IMG.get_height()*0.45))) # scale down to 45 percent of original
 
-CANNON_BULLET = pygame.image.load(os.path.join('assets', 'Heavy_Shell.png'))
+CANNON_BULLET = pygame.image.load(os.path.join('assets', 'cannon_shell.png'))
 CANNON_BULLET = pygame.transform.smoothscale(CANNON_BULLET, (int(CANNON_BULLET.get_width()*0.7), int(CANNON_BULLET.get_height()*0.7)))  # scale down to 70 percent of original
 
-TANK_BULLET = pygame.image.load(os.path.join('assets', 'Medium_Shell.png'))
+TANK_BULLET = pygame.image.load(os.path.join('assets', 'tank_shell.png'))
 TANK_BULLET = pygame.transform.smoothscale(TANK_BULLET, (int(TANK_BULLET.get_width()*0.80), int(TANK_BULLET.get_height()*0.80)))  # scale down to 50 percent of original
 TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 

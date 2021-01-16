@@ -35,6 +35,6 @@ class Tank(Weapon):
         adds a bullet to the list of bullets shot by the player
         '''
         if self.cooldown_counter == 0:  # if weapon can shoot
-            bullet = Bullet((self.x-25, self.y+self.get_height()*0.5), self.bullet_image)
+            bullet = Bullet((self.x+10, self.y+self.get_height()-5), self.bullet_image)
             self.bullets.append(bullet)
             self.cooldown_counter = 1  # start cooldown
