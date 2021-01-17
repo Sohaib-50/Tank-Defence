@@ -22,11 +22,11 @@ class Tank(Weapon):
         self.cooldown()
         for bullet in self.bullets:
             if bullet.off_screen(HEIGHT):
-                print(bullet)
                 self.bullets.remove(bullet)
             elif bullet.collision(player):
                 player.reduce_health()
-                self.bullets.remove(bullet)
+                if bullet in self.bullets:
+                    self.bullets.remove(bullet)
             bullet.move(vel)
 
 

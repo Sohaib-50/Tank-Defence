@@ -29,7 +29,6 @@ class Cannon(Weapon):
         for bullet in self.bullets:
             bullet.move(vel)  # move the bullet
             if bullet.off_screen(HEIGHT):
-                print(bullet)
                 self.bullets.remove(bullet)
             else:
                 # check if the current bullet has collided with any of the enemies on screen
@@ -37,7 +36,6 @@ class Cannon(Weapon):
                 for enemy in set(enemies):
                     if bullet.collision(enemy):
                         enemies.remove(enemy)
-                        self.bullets.remove(bullet)
                         if bullet in self.bullets:
                             self.bullets.remove(bullet)
 

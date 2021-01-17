@@ -1,15 +1,16 @@
 import os
 from copy import copy
 from random import randint
+from sys import exit
 
-from bullet import Bullet
 import pygame
 
 from cannon import Cannon
 from constants import (BLACK, BULLETS_VEL, ENEMY_VEL, FPS, GREEN, GREY, HEIGHT,
-                       INITIAL_WAVE, PLAYER_VEL, WHITE, WIDTH)
+                       WAVE_INCREMENT, PLAYER_VEL, WHITE, WIDTH)
 from helpers import collide, draw_healthbar, draw_track
 from tank import Tank
+
 
 pygame.init()
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -38,22 +39,23 @@ TANK_BULLET = pygame.transform.smoothscale(TANK_BULLET, (int(TANK_BULLET.get_wid
 TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 
 
-
 def play() -> None:
     run = True
-    stats_font = pygame.font.SysFont("arial", 30)
+    stats_font = pygame.font.SysFont("arial", 30)  # for level and health texts
     lost_label = pygame.font.SysFont("arial", 90).render("You Lost!!", 1, WHITE)
     level = 0
-
-    enemies = set()
-    wave_size = 0  # number of enemies in a level
-
-    player_cannon = Cannon((WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.81), vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
-
     lost = False
     lost_time = 0
+    enemies = set()  # set of enemies currently alive
+    wave_size = 0  # number of enemies in a level
+    player_cannon = Cannon(position=(WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.81),
+                            vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
 
-    def update_window():
+
+    def update_window() -> None:
+        '''
+        updates the window to show the latest state of the game
+        '''
         level_label = stats_font.render(f"Level: {level}", 1, WHITE)
         health_label = stats_font.render(f"Health", 1, WHITE)
         
@@ -65,44 +67,46 @@ def play() -> None:
         for enemy in enemies:  # draw enemies
             enemy.draw(WINDOW) 
         player_cannon.draw(WINDOW)  # cannon
-        
+    
         if lost:
-            WINDOW.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, HEIGHT*1/5))
+            WINDOW.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, HEIGHT*1/5))  # You lost message
 
         pygame.display.update()  # make the latest changes appear on screen
 
 
-
     while run:
-        CLOCK.tick(FPS)
+        CLOCK.tick(FPS)  # to mantain framerate
         update_window()
+
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+            if event.type == pygame.QUIT:  # if cross button clicked or alt+f4 pressed
+                pygame.quit()  # close pygame
+                exit()  # exit the program
 
         if player_cannon.get_health() <= 0:
             lost = True
             lost_time += 1
 
         if lost:
-            if lost_time > (FPS * 3):  # if lost for 3 seconds (to show the lost message for 3 seconds)
+            if lost_time > (FPS * 3):  # if lost for 3 seconds 
                 run = False
             else:
-                continue
+                continue  # to show the lost message for 3 seconds and not do any more changes in the game
 
         if len(enemies) == 0:  # if all enemies of current level are destroyed
             level += 1
-            wave_size += INITIAL_WAVE
+            wave_size += WAVE_INCREMENT
+            # add new enemies
             for i in range(wave_size):
                 x = randint(
                     max(0, player_cannon.get_x()-WIDTH//2),
                     min(WIDTH-TANK_IMG.get_width(), player_cannon.get_x()+WIDTH//2)
                     )  # to make new enemies spawn more towards the area player is currently in
                 y = randint(-HEIGHT, -HEIGHT//4)  
-                new_enemy = Tank((x, y), ENEMY_VEL, TANK_IMG, TANK_BULLET)
+                new_enemy = Tank(position=(x, y), vel=ENEMY_VEL, image=TANK_IMG, bullet_image=TANK_BULLET)
                 enemies.add(new_enemy)
 
-        keys_pressed = pygame.key.get_pressed()
+        keys_pressed = pygame.key.get_pressed()  # get all keys that are currently pressed
 
         # keys for moving left/right
         if keys_pressed[pygame.K_d] or keys_pressed[pygame.K_RIGHT]:
@@ -134,7 +138,6 @@ def play() -> None:
             
 
         player_cannon.move_bullets(-BULLETS_VEL, enemies)
-
     
 
 def main_menu() -> None:
