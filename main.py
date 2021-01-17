@@ -124,11 +124,7 @@ def play() -> None:
             enemy.move()
             enemy.move_bullets(BULLETS_VEL, player_cannon)
 
-            if collide(enemy, player_cannon):
-                player_cannon.reduce_health()
-                enemies.remove(enemy)
-
-            elif enemy.get_y() > HEIGHT:
+            if collide(enemy, player_cannon) or enemy.get_y() > HEIGHT:
                 player_cannon.reduce_health()  # TODO: health or lives?
                 enemies.remove(enemy)
                 
