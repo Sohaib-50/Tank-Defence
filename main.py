@@ -2,6 +2,7 @@ import os
 from copy import copy
 from random import randint
 from sys import exit
+from typing import Set
 
 import pygame
 
@@ -46,7 +47,7 @@ def play() -> None:
     level = 0
     lost = False
     lost_time = 0
-    enemies = set()  # set of enemies currently alive
+    enemies: Set[Tank] = set()  # set of enemies currently alive
     wave_size = 0  # number of enemies in a level
     player_cannon = Cannon(position=(WIDTH/2 - CANNON_IMG.get_width()/2, HEIGHT*0.81),
                             vel=PLAYER_VEL, image=CANNON_IMG, bullet_image=CANNON_BULLET)
@@ -136,8 +137,9 @@ def play() -> None:
         player_cannon.move_bullets(-BULLETS_VEL, enemies)
     
 
+
 def main_menu() -> None:
-    btn_padding = 10
+    BTN_PADDING = 10
     run = True
     menu_font_1 = pygame.font.SysFont("comicsansms", 100)
     menu_font_2 = pygame.font.SysFont("arial", 35)
@@ -162,10 +164,10 @@ def main_menu() -> None:
 
     begin_label = menu_font_2.render("Play", 1, BLACK)
     begin_button = begin_label.get_rect()
-    begin_button.x = WIDTH/2 - begin_label.get_width()/2 - btn_padding
-    begin_button.y = HEIGHT*(5/6) - btn_padding
-    begin_button.width += btn_padding * 2
-    begin_button.height += btn_padding * 2
+    begin_button.x = WIDTH/2 - begin_label.get_width()/2 - BTN_PADDING
+    begin_button.y = HEIGHT*(5/6) - BTN_PADDING
+    begin_button.width += BTN_PADDING * 2
+    begin_button.height += BTN_PADDING * 2
 
     
     while run:
@@ -188,13 +190,14 @@ def main_menu() -> None:
         pygame.display.update()
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:   # if cross button clicked or alt+f4 pressed
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:  # if mouse pressed
                 if begin_button.collidepoint(event.pos):  # if mouse pressed on button
                     play()  # start the game
 
     pygame.quit()
+    exit()
 
 
 
