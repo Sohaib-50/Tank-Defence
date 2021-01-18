@@ -1,6 +1,5 @@
 import os
-from copy import copy
-from random import randint
+from random import choice, randint
 from sys import exit
 from typing import Set
 
@@ -20,23 +19,26 @@ CLOCK = pygame.time.Clock()  # to limit framerate
 
 
 ## Load images
-BG = pygame.transform.smoothscale(pygame.image.load(os.path.join("assets", "bg_1.png")), (WIDTH, HEIGHT))  # Background image
+BG = pygame.transform.smoothscale(pygame.image.load(os.path.join("assets", "background.png")), (WIDTH, HEIGHT))  # Background image
 
-TRACK = pygame.image.load(os.path.join('assets', 'Track_1_A.png'))  # player's tracks
+TRACK = pygame.image.load(os.path.join('assets', 'track.png'))  # player's tracks
 TRACK = pygame.transform.smoothscale(TRACK, (int(TRACK.get_width()*0.5), int(TRACK.get_height()*0.5)))  # scale down to 50 percent of original
 TRACK = pygame.transform.rotate(TRACK, 90)  # rotate by 90 degrees
 
-CANNON_IMG = pygame.image.load(os.path.join('assets', 'Gun_01.png'))
+CANNON_IMG = pygame.image.load(os.path.join('assets', 'cannon.png'))
 CANNON_IMG = pygame.transform.smoothscale(CANNON_IMG, (int(CANNON_IMG.get_width()*0.6), int(CANNON_IMG.get_height()*0.6)))  # scale down to 60 percent of original
 
-TANK_IMG = pygame.image.load(os.path.join("assets", "M-6_preview.png"))
-TANK_IMG = pygame.transform.smoothscale(TANK_IMG, (int(TANK_IMG.get_width()*0.45), int(TANK_IMG.get_height()*0.45))) # scale down to 45 percent of original
+TANK_IMG_1 = pygame.image.load(os.path.join("assets", "tank1.png"))
+TANK_IMG_1 = pygame.transform.smoothscale(TANK_IMG_1, (int(TANK_IMG_1.get_width()*0.45), int(TANK_IMG_1.get_height()*0.45))) # scale down to 45 percent of original
+
+TANK_IMG_2 = pygame.image.load(os.path.join("assets", "tank2.png"))
+TANK_IMG_2 = pygame.transform.smoothscale(TANK_IMG_2, (int(TANK_IMG_2.get_width()*0.50), int(TANK_IMG_2.get_height()*0.50))) # scale down to 50 percent of original
 
 CANNON_BULLET = pygame.image.load(os.path.join('assets', 'cannon_shell.png'))
 CANNON_BULLET = pygame.transform.smoothscale(CANNON_BULLET, (int(CANNON_BULLET.get_width()*0.7), int(CANNON_BULLET.get_height()*0.7)))  # scale down to 70 percent of original
 
 TANK_BULLET = pygame.image.load(os.path.join('assets', 'tank_shell.png'))
-TANK_BULLET = pygame.transform.smoothscale(TANK_BULLET, (int(TANK_BULLET.get_width()*0.80), int(TANK_BULLET.get_height()*0.80)))  # scale down to 50 percent of original
+TANK_BULLET = pygame.transform.smoothscale(TANK_BULLET, (int(TANK_BULLET.get_width()*0.80), int(TANK_BULLET.get_height()*0.80)))  # scale down to 80 percent of original
 TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 
 
@@ -101,10 +103,10 @@ def play() -> None:
             for i in range(wave_size):
                 x = randint(
                     max(0, player_cannon.get_x()-WIDTH//2),
-                    min(WIDTH-TANK_IMG.get_width(), player_cannon.get_x()+WIDTH//2)
+                    min(WIDTH-TANK_IMG_1.get_width(), player_cannon.get_x()+WIDTH//2)
                     )  # to make new enemies spawn more towards the area player is currently in
                 y = randint(-HEIGHT, -HEIGHT//4)  
-                new_enemy = Tank(position=(x, y), vel=ENEMY_VEL, image=TANK_IMG, bullet_image=TANK_BULLET)
+                new_enemy = Tank(position=(x, y), vel=ENEMY_VEL, image=choice((TANK_IMG_1, TANK_IMG_2)), bullet_image=TANK_BULLET)
                 enemies.add(new_enemy)
 
         keys_pressed = pygame.key.get_pressed()  # get all keys that are currently pressed
