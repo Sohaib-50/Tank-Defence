@@ -50,3 +50,4 @@ class Cannon(Weapon):
 
     def reduce_health(self) -> None:
         self.health -= self.REDUCE  # reduce
+        
