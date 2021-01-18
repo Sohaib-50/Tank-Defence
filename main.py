@@ -43,11 +43,13 @@ TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 
 
 def play() -> None:
+    '''
+    contains main game logic
+    '''
     run = True
     lost = False
     highscore = get_highscore()  # read highscore from file
     stats_font = pygame.font.Font(os.path.join("assets", "arial.ttf"), 25)  # for level and health texts
-    # game_over_font = pygame.font.Font(os.path.join("assets", "arial.ttf"),70)
     game_over_font = pygame.font.Font(os.path.join("assets", "impact.ttf"), 80)
     level = 0
     lost_time = 0
@@ -81,7 +83,6 @@ def play() -> None:
             if level > highscore:
                 new_highscore_label = game_over_font.render(f"NEW HIGHSCORE: {level}!!!", 1, WHITE)
                 WINDOW.blit(new_highscore_label, (WIDTH/2 - new_highscore_label.get_width()/2, HEIGHT*1/2))  # You lost message
-
 
         pygame.display.update()  # make the latest changes appear on screen
 
@@ -138,14 +139,14 @@ def play() -> None:
             enemy.move()
             enemy.move_bullets(BULLETS_VEL, player_cannon)
 
-            if collide(enemy, player_cannon) or enemy.get_y() > HEIGHT:
+            if collide(enemy, player_cannon) or enemy.get_y() > HEIGHT:  # collide with player or offscreen
                 player_cannon.reduce_health()  # TODO: health or lives?
                 enemies.remove(enemy)
                 
             # make enemies shoot at random times
             if randint(0, FPS*2) == 1:
                 enemy.shoot()
-            
+
 
         player_cannon.move_bullets(-BULLETS_VEL, enemies)
     
@@ -185,7 +186,7 @@ def main_menu() -> None:
     
     while run:
         WINDOW.fill(GREY)
-        
+
         WINDOW.blit(title_label, (WIDTH/2 - title_label.get_width()/2, HEIGHT*(1/10)))  # draw game title text
         
         # draw instructions text
@@ -211,7 +212,6 @@ def main_menu() -> None:
 
     pygame.quit()
     exit()
-
 
 
 
