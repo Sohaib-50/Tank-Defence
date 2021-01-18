@@ -20,7 +20,7 @@ class Tank(Weapon):
 
     def move_bullets(self, vel: int, player: Cannon)  -> None:
         self.cooldown()
-        for bullet in self.bullets:
+        for bullet in set(self.bullets): # need to iterate over copy of bullets because the set changes during iteration
             if bullet.off_screen(HEIGHT):
                 self.bullets.remove(bullet)
             elif bullet.collision(player):
@@ -36,5 +36,5 @@ class Tank(Weapon):
         '''
         if self.cooldown_counter == 0:  # if weapon can shoot
             bullet = Bullet((self.x+10, self.y+self.get_height()-5), self.bullet_image)
-            self.bullets.append(bullet)
+            self.bullets.add(bullet)
             self.cooldown_counter = 1  # start cooldown

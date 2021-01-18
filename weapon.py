@@ -12,7 +12,7 @@ class Weapon:
         self.image = image
         self.mask = mask.from_surface(self.image)
         self.bullet_image = bullet_image
-        self.bullets = []
+        self.bullets = set()
         self.vel = vel
         self.cooldown_counter = 0
         self.health = health

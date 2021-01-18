@@ -8,7 +8,7 @@ import pygame
 
 from cannon import Cannon
 from constants import (BLACK, BULLETS_VEL, ENEMY_VEL, FPS, GREEN, GREY, HEIGHT,
-                       WAVE_INCREMENT, PLAYER_VEL, WHITE, WIDTH)
+                       PLAYER_VEL, WAVE_INCREMENT, WHITE, WIDTH)
 from helpers import collide, draw_healthbar, draw_track
 from tank import Tank
 

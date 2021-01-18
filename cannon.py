@@ -26,14 +26,13 @@ class Cannon(Weapon):
         removes any bullet that collides with an enemy tank and also removes the hit tank
         '''
         self.cooldown()
-        for bullet in self.bullets:
+        for bullet in set(self.bullets):  # need to iterate over copy of enemies because the set changes during iteration
             bullet.move(vel)  # move the bullet
             if bullet.off_screen(HEIGHT):
                 self.bullets.remove(bullet)
             else:
                 # check if the current bullet has collided with any of the enemies on screen
-                # need to iterate over copy of enemies because the set changes during iteration
-                for enemy in set(enemies):
+                for enemy in set(enemies):  # need to iterate over copy of enemies because the set changes during iteration
                     if bullet.collision(enemy):
                         enemies.remove(enemy)
                         if bullet in self.bullets:
@@ -46,7 +45,7 @@ class Cannon(Weapon):
         if self.cooldown_counter == 0:  # if player can shoot
             # keeping the starting position of bullet to be the top tip of player cannon
             bullet = Bullet((self.x+7, self.y-25), self.bullet_image)
-            self.bullets.append(bullet)
+            self.bullets.add(bullet)
             self.cooldown_counter = 1  # start cooldown
 
     def reduce_health(self) -> None:
