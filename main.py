@@ -8,7 +8,7 @@ import pygame
 from cannon import Cannon
 from constants import (BLACK, BULLETS_VEL, ENEMY_VEL, FPS, GREEN, GREY, HEIGHT,
                        PLAYER_VEL, WAVE_INCREMENT, WHITE, WIDTH)
-from helpers import collide, draw_healthbar, draw_track
+from helpers import collide, draw_healthbar, draw_track, get_highscore, update_highscore
 from tank import Tank
 
 
@@ -44,8 +44,9 @@ TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 
 def play() -> None:
     run = True
+    highscore = get_highscore()  # read highscore from file
     stats_font = pygame.font.SysFont("arial", 30)  # for level and health texts
-    lost_label = pygame.font.SysFont("arial", 90).render("You Lost!!", 1, WHITE)
+    game_over_font = pygame.font.SysFont("arial", 70)
     level = 0
     lost = False
     lost_time = 0
@@ -59,11 +60,13 @@ def play() -> None:
         '''
         updates the window to show the latest state of the game
         '''
-        level_label = stats_font.render(f"Level: {level}", 1, WHITE)
+        level_label = stats_font.render(f"Current Level: {level}", 1, WHITE)
+        highscore_label = stats_font.render(f"Best: {max(highscore, level)}", 1, WHITE)
         health_label = stats_font.render(f"Health", 1, WHITE)
         
         WINDOW.blit(BG, (0, 0))  # background image
         WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))  # level text
+        WINDOW.blit(highscore_label, (WIDTH - highscore_label.get_width() - 10, 45))
         WINDOW.blit(health_label, (10, 10))  # health text
         draw_healthbar(WINDOW, player_cannon)
         draw_track(WINDOW, TRACK)  # cannon track
@@ -72,7 +75,12 @@ def play() -> None:
         player_cannon.draw(WINDOW)  # cannon
     
         if lost:
+            lost_label = game_over_font.render("Game Over.", 1, WHITE)
             WINDOW.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, HEIGHT*1/5))  # You lost message
+            if level > highscore:
+                new_highscore_label = game_over_font.render(f"NEW HIGHSCORE: {level}!!!", 1, WHITE)
+                WINDOW.blit(new_highscore_label, (WIDTH/2 - new_highscore_label.get_width()/2, HEIGHT*1/2))  # You lost message
+
 
         pygame.display.update()  # make the latest changes appear on screen
 
@@ -93,6 +101,8 @@ def play() -> None:
         if lost:
             if lost_time > (FPS * 3):  # if lost for 3 seconds 
                 run = False
+                if level > highscore:
+                    update_highscore(level)
             else:
                 continue  # to show the lost message for 3 seconds and not do any more changes in the game
 

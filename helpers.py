@@ -6,14 +6,18 @@ def get_highscore() -> int:
     '''
     gets high score from file
     '''
-    pass
+    with open("highscore.txt", "r") as file:
+        higschore = int(file.read())
+
+    return higschore
 
 
-def update_highscore(new_score: int) -> None:
+def update_highscore(new_highscore: int) -> None:
     '''
     updates the highscore in file to the the parameter new_score
     '''
-    pass
+    with open("highscore.txt", "w") as file:
+        file.write(str(new_highscore))
 
 
 def draw_healthbar(window, player):
