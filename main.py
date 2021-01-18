@@ -44,11 +44,12 @@ TANK_BULLET = pygame.transform.rotate(TANK_BULLET, 180)
 
 def play() -> None:
     run = True
-    highscore = get_highscore()  # read highscore from file
-    stats_font = pygame.font.SysFont("arial", 30)  # for level and health texts
-    game_over_font = pygame.font.SysFont("arial", 70)
-    level = 0
     lost = False
+    highscore = get_highscore()  # read highscore from file
+    stats_font = pygame.font.Font(os.path.join("assets", "arial.ttf"), 30)  # for level and health texts
+    # game_over_font = pygame.font.Font(os.path.join("assets", "arial.ttf"),70)
+    game_over_font = pygame.font.Font(os.path.join("assets", "impact.ttf"), 80)
+    level = 0
     lost_time = 0
     enemies: Set[Tank] = set()  # set of enemies currently alive
     wave_size = 0  # number of enemies in a level
@@ -153,9 +154,9 @@ def play() -> None:
 def main_menu() -> None:
     BTN_PADDING = 10
     run = True
-    menu_font_1 = pygame.font.SysFont("comicsansms", 100)
-    menu_font_2 = pygame.font.SysFont("arial", 35)
-    menu_font_3 = pygame.font.SysFont("arial", 23)
+    menu_font_1 = pygame.font.Font(os.path.join("assets", "comic.ttf"), 100)
+    menu_font_2 = pygame.font.Font(os.path.join("assets", "arial.ttf"),35)
+    menu_font_3 = pygame.font.Font(os.path.join("assets", "arial.ttf"),23)
 
     title_label = menu_font_1.render("Tank Defence", 1, WHITE)
 
