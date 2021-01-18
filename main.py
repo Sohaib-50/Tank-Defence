@@ -102,8 +102,8 @@ def play() -> None:
             # add new enemies
             for i in range(wave_size):
                 x = randint(
-                    max(0, player_cannon.get_x()-WIDTH//2),
-                    min(WIDTH-TANK_IMG_1.get_width(), player_cannon.get_x()+WIDTH//2)
+                    max(0, player_cannon.get_x()-WIDTH//3),
+                    min(WIDTH-TANK_IMG_1.get_width(), player_cannon.get_x()+WIDTH//3)
                     )  # to make new enemies spawn more towards the area player is currently in
                 y = randint(-HEIGHT, -HEIGHT//4)  
                 new_enemy = Tank(position=(x, y), vel=ENEMY_VEL, image=choice((TANK_IMG_1, TANK_IMG_2)), bullet_image=TANK_BULLET)
