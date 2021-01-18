@@ -1,6 +1,6 @@
 TODO:
 
-1) Add high score feature using filing
+(DONE) 1) Add high score feature using filing
 
 	1a) make an empty text file
 	1b) implement the get_highscore function in helpers.py (read from file)
@@ -11,8 +11,10 @@ TODO:
 	"Highscore: <the highscore recieved from text file in step 1d>". Blit
 	it on top right corner under the "level" text
 
-2) Change font by using own font in assets
+(DONE) 2) Change font by using own font in assets
 	
 (DONE) 3) reduce enemy bullet size
 
 4) USE LINKED LIST FOR BULLETS LISTSS!!
+
+5) format all files once more.
