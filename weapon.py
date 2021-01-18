@@ -43,5 +43,3 @@ class Weapon:
             self.cooldown_counter = 0
         elif self.cooldown_counter > 0:
             self.cooldown_counter += 1
-
-# test line test line
