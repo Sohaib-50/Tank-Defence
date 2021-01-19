@@ -1,7 +1,7 @@
 from bullet import Bullet
-from weapon import Weapon
-from constants import HEIGHT
 from cannon import Cannon
+from constants import HEIGHT
+from weapon import Weapon
 
 
 class Tank(Weapon):

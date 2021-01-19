@@ -1,5 +1,6 @@
 import pygame
-from constants import WIDTH, HEIGHT, RED, GREEN
+
+from constants import GREEN, HEIGHT, RED, WIDTH
 
 
 def get_highscore() -> int:
