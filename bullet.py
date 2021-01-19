@@ -1,5 +1,5 @@
 from pygame import mask
-import pygame
+
 from helpers import collide
 
 

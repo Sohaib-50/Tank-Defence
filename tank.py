@@ -38,4 +38,3 @@ class Tank(Weapon):
             bullet = Bullet((self.x+10, self.y+self.get_height()-5), self.bullet_image)
             self.bullets.add(bullet)
             self.cooldown_counter = 1  # start cooldown
-            
