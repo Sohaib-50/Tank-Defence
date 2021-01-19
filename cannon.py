@@ -26,7 +26,7 @@ class Cannon(Weapon):
         removes any bullet that collides with an enemy tank and also removes the hit tank
         '''
         self.cooldown()
-        for bullet in set(self.bullets):  # need to iterate over copy of enemies because the set changes during iteration
+        for bullet in set(self.bullets):  # need to iterate over copy of bullets because the set changes during iteration
             bullet.move(vel)  # move the bullet
             if bullet.off_screen(HEIGHT):
                 self.bullets.remove(bullet)

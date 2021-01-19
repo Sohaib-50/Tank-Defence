@@ -140,7 +140,7 @@ def play() -> None:
             enemy.move_bullets(BULLETS_VEL, player_cannon)
 
             if collide(enemy, player_cannon) or enemy.get_y() > HEIGHT:  # collide with player or offscreen
-                player_cannon.reduce_health()  # TODO: health or lives?
+                player_cannon.reduce_health()
                 enemies.remove(enemy)
                 
             # make enemies shoot at random times
