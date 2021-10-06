@@ -7,9 +7,7 @@ def get_highscore() -> int:
     gets high score from file
     '''
     with open("highscore.txt", "r") as file:
-        higschore = int(file.read())
-
-    return higschore
+        return int(file.read())
 
 
 def update_highscore(new_highscore: int) -> None:
@@ -20,7 +18,7 @@ def update_highscore(new_highscore: int) -> None:
         file.write(str(new_highscore))
 
 
-def draw_healthbar(window, player):
+def draw_healthbar(window, player) -> None:
     '''
     draws the player's health bar on around top left of screen
     '''
@@ -28,7 +26,7 @@ def draw_healthbar(window, player):
     pygame.draw.rect(window, GREEN, (10, 45, 120 * (player.health/player.max_health), 15))
 
 
-def draw_track(window, track_image):
+def draw_track(window, track_image) -> None:
     '''
     draws the track on which the player cannon can move
     '''
